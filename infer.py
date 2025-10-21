@@ -389,15 +389,16 @@ def run(args: DictConfig):
         input = input.replace("{{rad_reports}}", "{rad_reports}")
 
         # 历史诊断：不参与长度控制以保持一致性
-        past_diagnosis_results_for_id = ""
-        idx_doc = 1
-        for model_name, model_results in all_past_results.items():
-            if int(_id) in model_results:
-                text = model_results[int(_id)]
-                if isinstance(text, dict) and 'Diagnosis' in text:
-                    text = text['Diagnosis']
-                past_diagnosis_results_for_id += f"<Result from previous doctor {idx_doc}>\n{str(text).strip()}\n"
-                idx_doc += 1
+        if hasattr(args, 'use_past_diagnosis') and args.use_past_diagnosis:
+            past_diagnosis_results_for_id = ""
+            idx_doc = 1
+            for model_name, model_results in all_past_results.items():
+                if int(_id) in model_results:
+                    text = model_results[int(_id)]
+                    if isinstance(text, dict) and 'Diagnosis' in text:
+                        text = text['Diagnosis']
+                    past_diagnosis_results_for_id += f"<Result from previous doctor {idx_doc}>\n{str(text).strip()}\n"
+                    idx_doc += 1
 
         input, fewshot_examples, rad_reports = control_context_length(
             input,
@@ -415,7 +416,7 @@ def run(args: DictConfig):
             length_summary_prompt,
             diagnostic_guidelines,
             region,
-            past_diagnosis_results=past_diagnosis_results_for_id,
+            # past_diagnosis_results=past_diagnosis_results_for_id,
         )
 
         if args.prompt_template == "DIAGSUM_WITH_PAST":
