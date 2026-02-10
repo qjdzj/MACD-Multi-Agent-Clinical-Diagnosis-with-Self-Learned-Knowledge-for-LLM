@@ -42,7 +42,9 @@ from agents.prompts import (
     WRITE_DIAG_CRITERIA_TEMPLATE,
     FULL_INFO_TEMPLATE_DIAGSUM_WITH_PAST,
 )
-from agents import guidelines_preofession
+from agents import reference_llama70B
+from agents import reference_deepseek70B
+from agents import reference_llama8B
 from utils.logging import read_from_pickle_file
 
 
@@ -164,11 +166,14 @@ def run(args: DictConfig):
     llm = CustomLLM(
         model_name=args.model_name,
         openai_api_key=args.openai_api_key,
+        openai_api_base=args.openai_api_base,
         tags=tags,
         max_context_length=args.max_context_length,
         exllama=args.exllama,
         seed=args.seed,
         self_consistency=args.self_consistency,
+        lora_path=getattr(args, "lora_path", None),
+        use_lora=getattr(args, "use_lora", False)
     )
     llm.load_model(args.base_models)
 
@@ -265,17 +270,29 @@ def run(args: DictConfig):
 
     knowledge_mapping = {
         "Llama-3.1-8B-Instruct": {
-            "Abdomen": guidelines_preofession.abdomen_guideline,
-            "Chest": guidelines_preofession.chest_guideline
+            "Abdomen": reference_llama8B.abdomen_reference,
+            "Chest": reference_llama8B.chest_reference
         },
         "Llama-3.1-70B-Instruct": {
-            "Abdomen": guidelines_preofession.abdomen_guideline,
-            "Chest": guidelines_preofession.chest_guideline
+            "Abdomen": reference_llama70B.abdomen_reference,
+            "Chest": reference_llama70B.chest_reference
         },
         "DeepSeek-R1-Distill-Llama-70B": {
-            "Abdomen": guidelines_preofession.abdomen_guideline,
-            "Chest": guidelines_preofession.chest_guideline
-        }
+            "Abdomen": reference_deepseek70B.abdomen_reference,
+            "Chest": reference_deepseek70B.chest_reference
+        },
+        "deepseek-v3-1-250821": {
+            "Abdomen": reference_llama70B.abdomen_reference,
+            "Chest": reference_llama70B.chest_reference
+        },
+        "qwen3-235b-a22b": {
+            "Abdomen": reference_llama70B.abdomen_reference,
+            "Chest": reference_llama70B.chest_reference
+        },
+        "gpt-5": {
+            "Abdomen": reference_llama70B.abdomen_reference,
+            "Chest": reference_llama70B.chest_reference
+        },
     }
 
     pathology = args.pathology
@@ -287,9 +304,9 @@ def run(args: DictConfig):
     model_name = args.model_name
     guideline_text_for_this_run = knowledge_mapping.get(model_name, {}).get(region, "")
 
-    diagnostic_guidelines = ""
+    diagnostic_guidelines = "Based on the provided diagnostic criteria, please analyze and diagnose the disease. The diagnostic criteria are offered as a reference; however, it is essential to consider the actual condition of the patient comprehensively. Please provide a diagnosis that aligns with the given information and the patient's specific situation.\n"
     if args.guideline:
-        diagnostic_guidelines = guideline_text_for_this_run 
+        diagnostic_guidelines += guideline_text_for_this_run 
 
     if args.guideline and not guideline_text_for_this_run:
         logger.warning(f"Guideline is enabled, but no knowledge found for model '{model_name}' and region '{region}'!")
