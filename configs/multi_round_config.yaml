@@ -1,0 +1,97 @@
+defaults:
+  - _self_
+  - paths: example
+  - model: Deepseek-R1
+
+max_rounds: 3 
+consistency_threshold: 0.82  
+
+enable_differentiation_analysis: True
+
+biobert_model_path: 
+difference_json_path: "./difference.json"  
+
+diagnosis_models:
+  - model_name: "Llama-3.1-8B-Instruct"
+    gpu_id: 0 
+    openai_api_key: 
+    max_context_length: 12288
+    exllama: False
+    system_tag_start: "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\n"
+    system_tag_end: "<|eot_id|>"
+    user_tag_start: "<|start_header_id|>user<|end_header_id|>\n\n"
+    user_tag_end: "<|eot_id|>"
+    ai_tag_start: "<|start_header_id|>assistant<|end_header_id|>\n\n"
+    ai_tag_end: "<|eot_id|>"
+    stop_words:
+      - "<|eot_id|>"
+      - "<|end_of_text|>"
+      - "<|eom_id|>"
+  
+  - model_name: "DeepSeek-R1-Distill-Llama-70B"
+    gpu_id: 1  
+    openai_api_key: 
+    max_context_length: 12288
+    exllama: False
+    system_tag_start: "<｜begin▁of▁sentence｜><|start_header_id|>system<|end_header_id|>\n\n"
+    system_tag_end: "<|eot_id|>"
+    user_tag_start: "<|start_header_id|>user<|end_header_id|>\n\n"
+    user_tag_end: "<|eot_id|>"
+    ai_tag_start: "<|start_header_id|>assistant<|end_header_id|>\n\n"
+    ai_tag_end: "<|eot_id|>"
+    stop_words:
+      - "<|eot_id|>"
+      - "<｜end▁of▁sentence｜>"
+      - "<|eom_id|>"
+  
+  - model_name: "Llama-3.1-70B-Instruct"
+    gpu_id: 2  
+    openai_api_key: 
+    max_context_length: 12288
+    exllama: False
+    system_tag_start: "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\n"
+    system_tag_end: "<|eot_id|>"
+    user_tag_start: "<|start_header_id|>user<|end_header_id|>\n\n"
+    user_tag_end: "<|eot_id|>"
+    ai_tag_start: "<|start_header_id|>assistant<|end_header_id|>\n\n"
+    ai_tag_end: "<|eot_id|>"
+    stop_words:
+      - "<|eot_id|>"
+      - "<|end_of_text|>"
+      - "<|eom_id|>"
+
+judge_agent:
+  api_base: 
+  api_key: 
+  model_name: gpt-4.1 
+  temperature: 0.3
+  max_tokens: 8192
+
+
+pathology: pericarditis  
+prompt_template: DIAGSUM
+summarize: True
+fewshot: False
+include_ref_range: False
+bin_lab_results: False
+bin_lab_results_abnormal: False
+only_abnormal_labs: False
+abbreviated: True
+guideline: True  
+
+
+order: pli
+diagnostic_criteria: f
+confirm_diagnosis: False
+
+
+patient_list_path: null
+first_patient:
+seed: 42
+exllama: True
+
+
+local_logging_dir: 
+save_probabilities: False
+self_consistency: False
+run_descr: null

@@ -1,0 +1,134 @@
+{
+  "meta_info": {
+    "description": "Comprehensive clinical difference tables with granular, itemized distinctions.",
+    "language": "English",
+    "structure_note": "Each item in 'difference_points' represents a single, distinct contrast."
+  },
+  "abdominal_diseases": {
+    "appendicitis_vs_cholecystitis": {
+      "pair_id": "appendicitis_vs_cholecystitis",
+      "disease_A": "appendicitis",
+      "disease_B": "cholecystitis",
+      "difference_points": [
+        "Pain Localization: Appendicitis typically localizes to the Right Lower Quadrant (RLQ) after initial diffusion, whereas Cholecystitis strictly localizes to the Right Upper Quadrant (RUQ) or epigastrium.",
+        "Pain Radiation/Migration Pattern: Appendicitis classically presents with visceral pain migrating from the periumbilical region to the RLQ, whereas Cholecystitis pain frequently radiates to the right scapula, shoulder, or interscapular area.",
+        "Physical Examination Signs: Appendicitis is distinguished by tenderness at McBurney's point and positive Rovsing's, Psoas, or Obturator signs, whereas Cholecystitis is characterized by a positive Murphy's sign (inspiratory arrest on deep RUQ palpation).",
+        "Dietary Precipitants: Appendicitis onset is generally independent of food intake, whereas Cholecystitis symptom onset is frequently precipitated or exacerbated by the ingestion of fatty or high-lipid meals.",
+        "Imaging Morphology (US/CT): Appendicitis is identified by a non-compressible, blind-ended tubular structure with a diameter >6mm, whereas Cholecystitis is identified by gallbladder wall thickening (>3-4mm), pericholecystic fluid, or sonographic Murphy's sign.",
+        "Hepatic Laboratory Markers: Appendicitis typically presents with normal liver chemistries, whereas Cholecystitis may be associated with mild elevations in alkaline phosphatase, GGT, or bilirubin due to reactive inflammation or biliary obstruction."
+      ]
+    },
+    "appendicitis_vs_diverticulitis": {
+      "pair_id": "appendicitis_vs_diverticulitis",
+      "disease_A": "appendicitis",
+      "disease_B": "diverticulitis",
+      "difference_points": [
+        "Pain Localization: Appendicitis pain typically localizes to the Right Lower Quadrant (RLQ) at McBurney's point, whereas Diverticulitis pain typically localizes to the Left Lower Quadrant (LLQ) in the sigmoid colon region.",
+        "Bowel Habits: Appendicitis is rarely associated with significant changes in bowel habits, whereas Diverticulitis is frequently accompanied by constipation, diarrhea, or a distinct change in bowel movements.",
+        "Anorexia/Nausea Presentation: Appendicitis typically presents with anorexia and nausea preceding the localization of pain, whereas in Diverticulitis, nausea is less prominent and pain is the primary presenting symptom.",
+        "Imaging Findings (CT): Appendicitis is defined by a dilated (>6mm) blind-ended tubular structure with wall enhancement, whereas Diverticulitis is defined by the presence of inflamed diverticula, colonic wall thickening, and pericolic fat stranding.",
+        "Past Medical History: Appendicitis is an acute, de novo event, whereas Diverticulitis often occurs in patients with a known history of diverticulosis or chronic low-fiber dietary intake.",
+        "Rectal Examination: Appendicitis may present with tenderness on the right side of the rectal vault, whereas Diverticulitis may present with tenderness or a mass on the left side."
+      ]
+    },
+    "appendicitis_vs_pancreatitis": {
+      "pair_id": "appendicitis_vs_pancreatitis",
+      "disease_A": "appendicitis",
+      "disease_B": "pancreatitis",
+      "difference_points": [
+        "Pain Localization: Appendicitis typically localizes to the Right Lower Quadrant (RLQ) at McBurney's point, whereas Pancreatitis typically localizes to the epigastrium or Left Upper Quadrant (LUQ).",
+        "Pain Radiation Pattern: Appendicitis is characterized by pain migration from the periumbilical region to the RLQ, whereas Pancreatitis is characterized by deep, 'boring' pain radiating directly through to the mid-back.",
+        "Biochemical Markers: Appendicitis presents with normal or minimally elevated serum amylase/lipase, whereas Pancreatitis is diagnostically defined by serum lipase or amylase elevation greater than three times the upper limit of normal.",
+        "Etiology and Risk Profile: Appendicitis is commonly caused by lymphoid hyperplasia or fecaliths and is prevalent in younger demographics, whereas Pancreatitis is strongly associated with cholelithiasis (gallstones) or excessive alcohol intake.",
+        "Vomiting Characteristics: Appendicitis typically involves mild, self-limiting vomiting that follows the onset of pain, whereas Pancreatitis often presents with severe, persistent, and intractable vomiting/retching.",
+        "Imaging Semiology (CT): Appendicitis is visualized as a dilated (>6mm) blind-ended tube with wall thickening, whereas Pancreatitis is visualized as diffuse pancreatic enlargement, parenchymal edema, and peripancreatic fluid collections.",
+        "Systemic Complications: Appendicitis complications are typically localized (perforation, abscess), whereas Pancreatitis carries a higher risk of systemic inflammatory response syndrome (SIRS), shock, and multi-organ failure (e.g., ARDS, renal failure)."
+      ]
+    },
+    "cholecystitis_vs_pancreatitis": {
+      "pair_id": "cholecystitis_vs_pancreatitis",
+      "disease_A": "cholecystitis",
+      "disease_B": "pancreatitis",
+      "difference_points": [
+        "Pain Localization: Cholecystitis pain typically localizes to the Right Upper Quadrant (RUQ), whereas Pancreatitis pain typically localizes to the epigastrium or Left Upper Quadrant (LUQ).",
+        "Pain Radiation Pattern: Cholecystitis is characterized by radiation to the right scapula or shoulder (Boas' sign), whereas Pancreatitis is characterized by pain radiating directly through the abdomen to the mid-back.",
+        "Biochemical Markers: Cholecystitis presents with normal or non-specifically elevated amylase/lipase, whereas Pancreatitis is diagnostically defined by serum amylase or lipase levels exceeding three times the upper limit of normal.",
+        "Physical Examination Signs: Cholecystitis is distinguished by a positive Murphy's sign (inspiratory arrest on RUQ palpation), whereas Pancreatitis presents with general epigastric tenderness but a negative Murphy's sign.",
+        "Positional Factors: Cholecystitis pain is generally unchanged by position, whereas Pancreatitis pain is often alleviated by sitting up and leaning forward (guarding the retroperitoneum).",
+        "Imaging Morphology (US/CT): Cholecystitis is identified by gallbladder wall thickening (>4mm) and pericholecystic fluid, whereas Pancreatitis is identified by diffuse pancreatic enlargement, parenchymal edema, and indistinct glandular margins.",
+        "Biliary Laboratory Trends: Cholecystitis may show mild alkaline phosphatase elevation without severe hyperbilirubinemia, whereas Gallstone Pancreatitis often presents with a transient but significant spike in ALT (>150 U/L) and bilirubin."
+  ]
+    },
+    "cholecystitis_vs_diverticulitis": {
+      "pair_id": "cholecystitis_vs_diverticulitis",
+      "disease_A": "cholecystitis",
+      "disease_B": "diverticulitis",
+      "difference_points": [
+        "Pain Localization: Cholecystitis pain typically localizes to the Right Upper Quadrant (RUQ) or epigastrium, whereas Diverticulitis pain typically localizes to the Left Lower Quadrant (LLQ) corresponding to the sigmoid colonns.",
+        "Primary Imaging Modality: Cholecystitis is primarily evaluated using Abdominal Ultrasound as the gold standard, whereas Diverticulitis is best diagnosed and staged using CT of the Abdomen and Pelvis with contrast.",
+        "Physical Examination Signs: Cholecystitis is distinguished by a positive Murphy's sign (inspiratory arrest on RUQ palpation), whereas Diverticulitis is characterized by localized LLQ tenderness, guarding, or a palpable sausage-shaped mass.",
+        "Bowel Function and Habits: Cholecystitis is typically not associated with changes in bowel movements, whereas Diverticulitis is frequently accompanied by alterations in bowel habits, such as constipation, diarrhea, or distinct urgency.",
+        "Pathophysiology: Cholecystitis is caused by cystic duct obstruction (usually by a gallstone) leading to gallbladder inflammation, whereas Diverticulitis is caused by the micro-perforation and inflammation of a colonic diverticulum.",
+        "Complication Spectrum: Cholecystitis complications include empyema, gangrene, or gallbladder perforation, whereas Diverticulitis complications typically involve abscess formation, obstruction, or colovesical fistulas (pneumaturia).",
+        "Symptom Precipitants: Cholecystitis attacks are often precipitated by the ingestion of fatty or high-cholesterol meals, whereas Diverticulitis onset is generally not immediately triggered by specific acute dietary intake."
+      ]
+    },
+    "diverticulitis_vs_pancreatitis": {
+      "pair_id": "diverticulitis_vs_pancreatitis",
+      "disease_A": "diverticulitis",
+      "disease_B": "pancreatitis",
+      "difference_points": [
+        "Pain Localization: Diverticulitis pain typically localizes to the Left Lower Quadrant (LLQ) in the sigmoid region, whereas Pancreatitis pain typically localizes to the epigastrium or Left Upper Quadrant (LUQ).",
+        "Pain Radiation Pattern: Diverticulitis pain is generally localized and non-radiating, whereas Pancreatitis pain classically radiates directly through the abdomen to the mid-back in a 'boring' quality.",
+        "Biochemical Markers: Diverticulitis presents with normal serum amylase and lipase levels, whereas Pancreatitis is diagnostically defined by lipase or amylase elevation greater than three times the upper limit of normal.",
+        "Bowel Function: Diverticulitis is frequently associated with changes in bowel habits such as constipation or diarrhea, whereas Pancreatitis is often associated with a paralytic ileus (decreased bowel sounds) and severe nausea/vomiting.",
+        "Imaging Findings (CT): Diverticulitis is evidenced by colonic wall thickening and pericolic fat stranding, whereas Pancreatitis is evidenced by diffuse pancreatic enlargement, parenchymal edema, and peripancreatic fluid.",
+        "Positional Relief: Diverticulitis patients often lie still to avoid peritoneal irritation, whereas Pancreatitis patients frequently seek relief by sitting up and leaning forward (fetal position).",
+        "Etiological Risk Factors: Diverticulitis is associated with a low-fiber diet, advanced age, and chronic constipation, whereas Pancreatitis is strongly associated with cholelithiasis (gallstones) or heavy alcohol consumption.",
+        "Complication Profile: Diverticulitis complications primarily involve fistula formation, colonic obstruction, or abscess, whereas Pancreatitis complications involve pseudocyst formation, splenic vein thrombosis, and systemic organ failure."
+      ]
+    }
+  },
+  "chest_diseases": {
+    "pericarditis_vs_pneumonia": {
+      "pair_id": "pericarditis_vs_pneumonia",
+      "disease_A": "pericarditis",
+      "disease_B": "pneumonia",
+      "difference_points": [
+        "In PATIENT HISTORY, Pericarditis presents with sharp, pleuritic chest pain that is typically positional (alleviated by sitting up and leaning forward, worsened by lying supine), whereas Pneumonia presents with pleuritic pain that is not relieved by positional changes and is often lateralized.",
+        "In PATIENT HISTORY, Pericarditis is commonly preceded by a viral prodrome or systemic inflammatory condition without significant productive cough, whereas Pneumonia is characterized by respiratory symptoms such as a productive cough with purulent sputum, dyspnea, and high-grade fever.",
+        "In PHYSICAL EXAMINATION, Pericarditis is pathognomonically identified by a pericardial friction rub (a scratchy, multiphasic sound best heard at the left sternal border), whereas Pneumonia is identified by pulmonary findings such as crackles (rales), bronchial breath sounds, and dullness to percussion over the affected lobe.",
+        "In LABORATORY RESULTS, Pneumonia frequently shows elevated Procalcitonin levels and positive sputum or blood cultures identifying a specific pathogen, whereas Pericarditis may show elevated inflammatory markers (CRP, ESR) with sterile blood cultures.",
+        "In IMAGING RESULT, Pericarditis typically presents with clear lung fields on Chest X-ray, though a large pericardial effusion may manifest as a globular 'water bottle' heart silhouette, whereas Pneumonia presents with focal lobar consolidation, interstitial infiltrates, or air bronchograms.",
+        "In IMAGING RESULT, Pneumonia may be associated with a parapneumonic pleural effusion, whereas Pericarditis is associated with a pericardial effusion visible on Echocardiography or CT, often without primary pulmonary parenchymal involvement."
+        ]
+    },
+    "pericarditis_vs_pulmonary_embolism": {
+      "pair_id": "pericarditis_vs_pulmonary_embolism",
+      "disease_A": "pericarditis",
+      "disease_B": "pulmonary embolism",
+      "difference_points": [
+        "In PATIENT HISTORY, Pericarditis presents with sharp, retrosternal pain that is characteristically positional (alleviated by sitting up and leaning forward, exacerbated by supine positioning), whereas Pulmonary Embolism presents with the sudden onset of pleuritic chest pain and dyspnea that is not improved by positional changes.",
+        "In PATIENT HISTORY, Pericarditis is often preceded by a viral prodrome or autoimmune flare, whereas Pulmonary Embolism is strongly associated with risk factors for venous thromboembolism (Virchow’s triad), such as recent surgery, immobilization, malignancy, or prior DVT.",
+        "In PHYSICAL EXAMINATION, Pulmonary Embolism frequently presents with unexplained tachycardia and tachypnea as primary signs, whereas Pericarditis generally presents with fever and tachycardia proportionate to pain or inflammation rather than hypoxia.",
+        "In LABORATORY RESULTS, Pulmonary Embolism is typically screened with a D-dimer assay (high sensitivity), which is markedly elevated in acute thrombosis, whereas Pericarditis shows elevated inflammatory markers (CRP, ESR) but does not typically cause D-dimer elevation unless there is concurrent infection or inflammation.",
+        "In IMAGING RESULT, Pulmonary Embolism is definitively diagnosed on CT Pulmonary Angiography (CTPA) by a vascular filling defect within the pulmonary arterial tree, whereas Pericarditis is characterized on CT or MRI by pericardial thickening (>4 mm) and pericardial effusion.",
+        "In IMAGING RESULT, Pulmonary Embolism may show signs of right ventricular strain (e.g., RV dilation or bowing of the interventricular septum) on Echocardiography, whereas Pericarditis is characterized by the presence of fluid in the pericardial space without primary RV strain (unless complicated by tamponade)."
+      ]
+    },
+    "pneumonia_vs_pulmonary_embolism": {
+      "pair_id": "pneumonia_vs_pulmonary_embolism",
+      "disease_A": "pneumonia",
+      "disease_B": "pulmonary embolism",
+      "difference_points": [
+        "In PATIENT HISTORY, Pneumonia typically presents with a gradual onset of productive cough, purulent sputum, and high-grade fevers, whereas Pulmonary Embolism presents with the sudden, acute onset of dyspnea and pleuritic chest pain, often without a productive cough.",
+        "In PATIENT HISTORY, Pneumonia is often associated with recent upper respiratory infection or sick contacts, whereas Pulmonary Embolism is strongly associated with venous thromboembolism risk factors (Virchow's triad) such as recent surgery, prolonged immobilization, or active malignancy.",
+        "In PHYSICAL EXAMINATION, Pneumonia is characterized by signs of lung consolidation, including bronchial breath sounds, dullness to percussion, and increased tactile fremitus over the affected lobe, whereas Pulmonary Embolism typically presents with clear lung fields or minor atelectasis despite significant respiratory distress.",
+        "In PHYSICAL EXAMINATION, Pulmonary Embolism may present with unilateral lower extremity swelling, tenderness, and erythema (signs of Deep Vein Thrombosis), findings which are unrelated to the pathophysiology of Pneumonia.",
+        "In LABORATORY RESULTS, Pneumonia frequently demonstrates elevated Procalcitonin and leukocytosis with a left shift, whereas Pulmonary Embolism is screened with a D-dimer assay (high negative predictive value) which is elevated in the presence of acute thrombosis.",
+        "In IMAGING RESULT, Pneumonia is visualized on Chest X-ray or CT as focal lobar consolidation, interstitial infiltrates, or air bronchograms, whereas Pulmonary Embolism often presents with a normal Chest X-ray or subtle signs like Hampton's Hump (wedge-shaped opacity) or Westermark's sign (focal oligemia).",
+        "In IMAGING RESULT, Pulmonary Embolism is definitively diagnosed by CT Pulmonary Angiography (CTPA) showing an intraluminal filling defect within the pulmonary arterial tree, whereas Pneumonia shows patent pulmonary vasculature amidst parenchymal opacity."
+     ]
+    }
+  }
+}

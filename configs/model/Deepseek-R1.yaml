@@ -1,0 +1,21 @@
+# @package _global_
+defaults:
+  - _self_
+
+openai_api_base: https://yunai.chat/v1
+openai_api_key: sk-yFldWURJH1N0uKCBii71vIOVcxW4BjPqKRdB57DeIZgfeM2R
+model_name: deepseek-v3-1-250821
+max_context_length: 8192
+exllama: False
+
+system_tag_start: "<｜begin▁of▁sentence｜><|System|>\n\n"
+system_tag_end: "<｜end▁of▁sentence｜>"
+
+user_tag_start: "<｜begin▁of▁sentence｜><|User|>\n\n"
+user_tag_end: "<｜end▁of▁sentence｜>"
+
+ai_tag_start: "<｜begin▁of▁sentence｜><|Assistant|>\n\n"
+ai_tag_end: "<｜end▁of▁sentence｜>"
+
+stop_words:
+ - "<｜end▁of▁sentence｜>"

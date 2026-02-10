@@ -1,0 +1,21 @@
+# @package _global_
+defaults:
+  - _self_
+
+openai_api_base: https://yunai.chat/v1
+openai_api_key: sk-yFldWURJH1N0uKCBii71vIOVcxW4BjPqKRdB57DeIZgfeM2R
+model_name: gpt-5
+max_context_length: 8192
+exllama: False
+
+system_tag_start: "<|im_start|>system"
+system_tag_end: "<|im_end|>"
+
+user_tag_start: "<|im_start|>user"
+user_tag_end: "<|im_end|>"
+
+ai_tag_start: "<|im_start|>assistant"
+ai_tag_end: "<|im_end|>"
+
+stop_words:
+ - "<|im_end|>"
