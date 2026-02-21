@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-实验结果分析脚本
-分析multi_round_results目录下各疾病的诊断一致性结果
+Experimental Results Analysis Script
+Analyze diagnosis consistency results for each disease in the multi_round_results directory
 """
 
 import json
@@ -82,27 +82,27 @@ PATHOLOGY_MAPPING_RULES = {
 
 def _normalize_disease_name(diagnosis: str) -> str:
     """
-    归一化疾病名称，移除括号和特殊格式
+    Normalize disease name, remove parentheses and special formats
     """
     if not diagnosis:
         return ""
     normalized = diagnosis.strip().lower()
-    # 移除括号及其内容
+    # Remove parentheses and their content
     normalized = re.sub(r'\s*\([^)]*\)', '', normalized)
     return normalized
 
 
 def map_pathology_name(original_sentence: str, extracted_diagnosis: str, mapping_rules: Optional[Dict[str, Any]] = None) -> str:
     """
-    对提取的诊断名进行全局映射
+    Global mapping for extracted diagnosis names
     
     Args:
-        original_sentence: 原始文本
-        extracted_diagnosis: 提取的诊断
-        mapping_rules: 映射规则（默认使用PATHOLOGY_MAPPING_RULES）
+        original_sentence: Original text
+        extracted_diagnosis: Extracted diagnosis
+        mapping_rules: Mapping rules (default uses PATHOLOGY_MAPPING_RULES)
     
     Returns:
-        映射后的疾病名称
+        Mapped disease name
     """
     if mapping_rules is None:
         mapping_rules = PATHOLOGY_MAPPING_RULES
@@ -112,20 +112,20 @@ def map_pathology_name(original_sentence: str, extracted_diagnosis: str, mapping
 
     # 遍历规则库中的每一种疾病及其规则
     for pathology_name, rules in mapping_rules.items():
-        # 层级 1: 专属正则表达式匹配 (如果有)
+        # Level 1: Dedicated regex matching (if exists)
         if 'regex_patterns' in rules:
             for pattern in rules['regex_patterns']:
                 match = pattern.search(extracted_diagnosis)
                 if match and keyword_positive(original_sentence, match.group(0)):
                     return pathology_name
 
-        # 层级 2: 模糊字符串匹配
+        # Level 2: Fuzzy string matching
         answer_for_search = remove_punctuation(extracted_diagnosis.lower())
         for word in answer_for_search.split():
             if fuzz.ratio(word, pathology_name) > 90 and keyword_positive(original_sentence, word):
                 return pathology_name
 
-        # 层级 3: 通用关键词组合匹配
+        # Level 3: Generic keyword combination matching
         all_alternatives = rules.get("alternatives", []) + rules.get("gracious_alternatives", [])
         for alt_rule in all_alternatives:
             loc = alt_rule["location"]
@@ -149,7 +149,7 @@ def map_pathology_name(original_sentence: str, extracted_diagnosis: str, mapping
 
 def check_diagnosis_match(diagnosis: str, pathology: str) -> bool:
     """
-    检查诊断是否与目标疾病匹配
+    Check if diagnosis matches target disease
     """
     normalized_diagnosis = _normalize_disease_name(diagnosis)
     mapped_diagnosis = map_pathology_name(diagnosis, normalized_diagnosis)
@@ -161,10 +161,10 @@ def check_diagnosis_match(diagnosis: str, pathology: str) -> bool:
 
 def analyze_case(case_data: Dict[str, Any], pathology: str) -> Dict[str, Any]:
     """
-    分析单个病例的诊断结果
+    Analyze individual case diagnosis results
     
     Returns:
-        包含分析结果的字典
+        Dictionary containing analysis results
     """
     case_id = case_data.get('case_id', 'Unknown')
     final_status = case_data.get('final_status', '')
@@ -173,7 +173,7 @@ def analyze_case(case_data: Dict[str, Any], pathology: str) -> Dict[str, Any]:
     
     is_consistent = '✅' in final_status or 'Consistent' in final_status
     
-    # 确定在哪一轮达成一致
+    # Determine at which round consistency was achieved
     consistent_at_round = None
     if is_consistent:
         rounds = case_data.get('rounds', [])
@@ -192,7 +192,7 @@ def analyze_case(case_data: Dict[str, Any], pathology: str) -> Dict[str, Any]:
         'consistent_at_round': consistent_at_round
     }
     
-    # 统一检查逻辑：只要有一个诊断匹配pathology，则记为any_match
+    # Unified check logic: record as any_match if any diagnosis matches pathology
     diagnoses = [d.strip() for d in final_diagnosis.split('|')]
     matches = [check_diagnosis_match(d, pathology) for d in diagnoses if d]
     result['any_match'] = any(matches) if matches else False
@@ -202,7 +202,7 @@ def analyze_case(case_data: Dict[str, Any], pathology: str) -> Dict[str, Any]:
 
 def analyze_disease_directory(disease_dir: Path, pathology: str) -> Optional[Dict[str, Any]]:
     """
-    分析单个疾病目录的所有病例
+    Analyze all cases in a single disease directory
     """
     summary_file = None
     for file in disease_dir.glob('*all_cases_summary.json'):
@@ -212,7 +212,7 @@ def analyze_disease_directory(disease_dir: Path, pathology: str) -> Optional[Dic
     if not summary_file or not summary_file.exists():
         return None
     
-    print(f"  读取文件: {summary_file}")
+    print(f"  Reading file: {summary_file}")
     with open(summary_file, 'r', encoding='utf-8') as f:
         cases = json.load(f)
     
@@ -220,17 +220,17 @@ def analyze_disease_directory(disease_dir: Path, pathology: str) -> Optional[Dic
     consistent_cases = []
     inconsistent_cases = []
     
-    # 按轮次统计一致性
+    # Count consistency by round
     round_1_consistent = 0
     round_2_consistent = 0
     round_3_consistent = 0
     
-    # 分析每个病例
+    # Analyze each case
     for case in cases:
         result = analyze_case(case, pathology)
         if result['is_consistent']:
             consistent_cases.append(result)
-            # 统计在哪一轮达成一致
+            # Count at which round consistency was achieved
             consistent_round = result.get('consistent_at_round')
             if consistent_round == 1:
                 round_1_consistent += 1
@@ -244,42 +244,42 @@ def analyze_disease_directory(disease_dir: Path, pathology: str) -> Optional[Dic
     consistent_count = len(consistent_cases)
     inconsistent_count = len(inconsistent_cases)
     
-    # 统计一致病例中的匹配情况 (现在改为只要有一个匹配就记为匹配)
+    # Count matches in consistent cases (now changed to record as match if any one matches)
     consistent_match = sum(1 for c in consistent_cases if c.get('any_match', False))
     consistent_no_match = consistent_count - consistent_match
     
-    # 统计不一致病例中的匹配情况
+    # Count matches in inconsistent cases
     inconsistent_any_match = sum(1 for c in inconsistent_cases if c.get('any_match', False))
     inconsistent_no_match = inconsistent_count - inconsistent_any_match
     
-    # 计算有效意见率和无效意见率
+    # Calculate effective opinion rate and ineffective opinion rate
     effective_opinions = consistent_match + inconsistent_any_match
     ineffective_opinions = consistent_no_match + inconsistent_no_match
     
     results = {
         'pathology': pathology,
         'total_cases': total_cases,
-        # 维度 1: 模型间一致性
+        # Dimension 1: Consistency between models
         'model_consistent': consistent_count,
         'model_inconsistent': inconsistent_count,
-        # 维度 2: 与病理一致性 (只要有一个匹配即记为一致，其余记为不一致)
+        # Dimension 2: Consistency with pathology (record as consistent if any one matches, otherwise as inconsistent)
         'pathology_consistent': effective_opinions,
         'pathology_inconsistent': ineffective_opinions,
-        # 维度 3: 一致且有效的统计
+        # Dimension 3: Statistics of consistent and effective
         'consistent_and_effective': consistent_match,
         'consistent_but_ineffective': consistent_no_match,
-        # 维度 4: 按轮次统计一致性
+        # Dimension 4: Count consistency by round
         'round_1_consistent': round_1_consistent,
         'round_2_consistent': round_2_consistent,
         'round_3_consistent': round_3_consistent,
-        # 保持旧字段兼容性
+        # Keep old field compatibility
         'effective_opinions': effective_opinions,
         'ineffective_opinions': ineffective_opinions,
         'effective_opinion_rate': effective_opinions,
         'ineffective_opinion_rate': ineffective_opinions
     }
     
-    # 计算百分比（基于总病例数）
+    # Calculate percentages (based on total cases)
     if total_cases > 0:
         results['model_consistent_percent'] = (consistent_count / total_cases) * 100
         results['model_inconsistent_percent'] = (inconsistent_count / total_cases) * 100
@@ -289,7 +289,7 @@ def analyze_disease_directory(disease_dir: Path, pathology: str) -> Optional[Dic
         results['consistent_but_ineffective_percent'] = (consistent_no_match / total_cases) * 100
         results['effective_opinion_rate'] = (effective_opinions / total_cases) * 100
         results['ineffective_opinion_rate'] = (ineffective_opinions / total_cases) * 100
-        # 按轮次的百分比
+        # Percentage by round
         results['round_1_consistent_percent'] = (round_1_consistent / total_cases) * 100
         results['round_2_consistent_percent'] = (round_2_consistent / total_cases) * 100
         results['round_3_consistent_percent'] = (round_3_consistent / total_cases) * 100
@@ -311,44 +311,44 @@ def analyze_disease_directory(disease_dir: Path, pathology: str) -> Optional[Dic
 
 def main():
     """
-    主函数：分析所有疾病的诊断结果
+    Main function: Analyze diagnosis results for all diseases
     """
     base_dir = Path('/data2/kunzhang/MIMIC-CDM/MIMIC-Clinical-Decision-Making-Framework-llama3.1_copy_copy/multi_round_results_human')
     
     if not base_dir.exists():
-        print(f"错误：目录不存在 {base_dir}")
+        print(f"Error: Directory does not exist {base_dir}")
         return
     
-    print(f"开始分析目录: {base_dir}\n")
+    print(f"Starting analysis of directory: {base_dir}\n")
     
     all_results = []
     
-    # 获取所有疾病子目录
+    # Get all disease subdirectories
     disease_dirs = [d for d in base_dir.iterdir() if d.is_dir()]
     
     for disease_dir in sorted(disease_dirs):
         pathology = disease_dir.name
-        print(f"\n正在分析疾病: {pathology}")
+        print(f"\nAnalyzing disease: {pathology}")
         print(f"{'='*60}")
         
         results = analyze_disease_directory(disease_dir, pathology)
         
         if results:
             all_results.append(results)
-            print(f"  总病例数: {results['total_cases']}")
-            print(f"  一致病例: {results['model_consistent']}")
-            print(f"  不一致病例: {results['model_inconsistent']}")
+            print(f"  Total cases: {results['total_cases']}")
+            print(f"  Consistent cases: {results['model_consistent']}")
+            print(f"  Inconsistent cases: {results['model_inconsistent']}")
         else:
-            print(f"  警告：未找到summary文件")
+            print(f"  Warning: summary file not found")
     
     if not all_results:
-        print("\n错误：未找到任何数据")
+        print("\nError: No data found")
         return
     
-    # 创建DataFrame
+    # Create DataFrame
     df = pd.DataFrame(all_results)
     
-    # 计算总体统计数据
+    # Calculate overall statistics
     total_all_cases = df['total_cases'].sum()
     total_effective_opinions = df['effective_opinions'].sum()
     total_ineffective_opinions = df['ineffective_opinions'].sum()
@@ -358,68 +358,68 @@ def main():
     total_round_2_consistent = df['round_2_consistent'].sum()
     total_round_3_consistent = df['round_3_consistent'].sum()
     
-    # 有效意见率的平均值（所有疾病的平均）
+    # Average effective opinion rate (average across all diseases)
     avg_effective_opinion_rate = df['effective_opinion_rate'].mean()
-    # 有效意见占所有病例总和的百分比
+    # Percentage of effective opinions out of total cases
     effective_opinion_percent_of_all = (total_effective_opinions / total_all_cases) * 100 if total_all_cases > 0 else 0.0
     
-    # 无效意见率的平均值（所有疾病的平均）
+    # Average ineffective opinion rate (average across all diseases)
     avg_ineffective_opinion_rate = df['ineffective_opinion_rate'].mean()
-    # 无效意见占所有病例总和的百分比
+    # Percentage of ineffective opinions out of total cases
     ineffective_opinion_percent_of_all = (total_ineffective_opinions / total_all_cases) * 100 if total_all_cases > 0 else 0.0
     
-    # 一致且有效的统计
+    # Statistics of consistent and effective
     avg_consistent_and_effective_rate = df['consistent_and_effective_percent'].mean()
     consistent_and_effective_percent_of_all = (total_consistent_and_effective / total_all_cases) * 100 if total_all_cases > 0 else 0.0
     
-    # 打印详细报告
+    # Print detailed report
     print("\n" + "="*100)
-    print("实验结果汇总报告")
+    print("Experimental Results Summary Report")
     print("="*100 + "\n")
     
     for _, row in df.iterrows():
         print(f"\n{'='*80}")
-        print(f"疾病: {row['pathology']}")
+        print(f"Disease: {row['pathology']}")
         print(f"{'='*80}")
-        print(f"总病例数: {row['total_cases']}")
+        print(f"Total cases: {row['total_cases']}")
         
-        print(f"\n【评估维度 1：模型间诊断一致性统计】")
-        print(f"  一致 (Consistent): {row['model_consistent']} ({row['model_consistent_percent']:.2f}%)")
-        print(f"  不一致 (Inconsistent): {row['model_inconsistent']} ({row['model_inconsistent_percent']:.2f}%)")
+        print(f"\n[Evaluation Dimension 1: Inter-Model Diagnostic Consistency Statistics]")
+        print(f"  Consistent: {row['model_consistent']} ({row['model_consistent_percent']:.2f}%)")
+        print(f"  Inconsistent: {row['model_inconsistent']} ({row['model_inconsistent_percent']:.2f}%)")
         
-        print(f"\n【评估维度 2：与病理诊断一致性统计 (有效性评估)】")
-        print(f"  有效(Matched/Effective): {row['pathology_consistent']} ({row['pathology_consistent_percent']:.2f}%)")
-        print(f"  无效 (Unmatched/Ineffective): {row['pathology_inconsistent']} ({row['pathology_inconsistent_percent']:.2f}%)")
+        print(f"\n[Evaluation Dimension 2: Consistency with Pathology Statistics (Effectiveness Evaluation)]")
+        print(f"  Effective (Matched/Effective): {row['pathology_consistent']} ({row['pathology_consistent_percent']:.2f}%)")
+        print(f"  Ineffective (Unmatched/Ineffective): {row['pathology_inconsistent']} ({row['pathology_inconsistent_percent']:.2f}%)")
         
-        print(f"\n【评估维度 3：模型一致 + 病理有效的统计】")
-        print(f"  一致且有效: {row['consistent_and_effective']} ({row['consistent_and_effective_percent']:.2f}%)")
-        print(f"  一致但无效: {row['consistent_but_ineffective']} ({row['consistent_but_ineffective_percent']:.2f}%)")
+        print(f"\n[Evaluation Dimension 3: Model Consistent + Pathologically Effective Statistics]")
+        print(f"  Consistent and effective: {row['consistent_and_effective']} ({row['consistent_and_effective_percent']:.2f}%)")
+        print(f"  Consistent but ineffective: {row['consistent_but_ineffective']} ({row['consistent_but_ineffective_percent']:.2f}%)")
         
-        print(f"\n【评估维度 4：按轮次统计一致性】")
-        print(f"  第1轮达成一致: {row['round_1_consistent']} ({row['round_1_consistent_percent']:.2f}%)")
-        print(f"  第2轮达成一致: {row['round_2_consistent']} ({row['round_2_consistent_percent']:.2f}%)")
-        print(f"  第3轮达成一致: {row['round_3_consistent']} ({row['round_3_consistent_percent']:.2f}%)")
+        print(f"\n[Evaluation Dimension 4: Consistency Statistics by Round]")
+        print(f"  Round 1 consistent: {row['round_1_consistent']} ({row['round_1_consistent_percent']:.2f}%)")
+        print(f"  Round 2 consistent: {row['round_2_consistent']} ({row['round_2_consistent_percent']:.2f}%)")
+        print(f"  Round 3 consistent: {row['round_3_consistent']} ({row['round_3_consistent_percent']:.2f}%)")
     
-    # 打印总体统计数据
+    # Print overall statistics
     print(f"\n\n{'='*100}")
-    print("总体统计数据")
+    print("Overall Statistics")
     print(f"{'='*100}")
-    print(f"\n所有疾病总病例数: {total_all_cases}")
+    print(f"\nTotal cases for all diseases: {total_all_cases}")
     
-    print(f"\n【有效性总体统计 (方法 2 - 与病理一致性)】")
-    print(f"  所有疾病有效一致率的平均值: {avg_effective_opinion_rate:.2f}%")
-    print(f"  有效一致数占所有病例总和的百分比: {total_effective_opinions}/{total_all_cases} ({effective_opinion_percent_of_all:.2f}%)")
+    print(f"\n[Overall Effectiveness Statistics (Method 2 - Consistency with Pathology)]")
+    print(f"  Average effective consistency rate across all diseases: {avg_effective_opinion_rate:.2f}%")
+    print(f"  Percentage of effective consistent cases out of total: {total_effective_opinions}/{total_all_cases} ({effective_opinion_percent_of_all:.2f}%)")
     
-    print(f"\n【无效性总体统计 (方法 2 - 与病理不一致)】")
-    print(f"  所有疾病无效不一致率的平均值: {avg_ineffective_opinion_rate:.2f}%")
-    print(f"  无效不一致数占所有病例总和的百分比: {total_ineffective_opinions}/{total_all_cases} ({ineffective_opinion_percent_of_all:.2f}%)")
+    print(f"\n[Overall Ineffectiveness Statistics (Method 2 - Inconsistency with Pathology)]")
+    print(f"  Average ineffective inconsistency rate across all diseases: {avg_ineffective_opinion_rate:.2f}%")
+    print(f"  Percentage of ineffective inconsistent cases out of total: {total_ineffective_opinions}/{total_all_cases} ({ineffective_opinion_percent_of_all:.2f}%)")
     
-    print(f"\n【一致且有效统计 (模型一致 + 病理匹配)】")
-    print(f"  所有疾病一致且有效率的平均值: {avg_consistent_and_effective_rate:.2f}%")
-    print(f"  一致且有效数占所有病例总和的百分比: {total_consistent_and_effective}/{total_all_cases} ({consistent_and_effective_percent_of_all:.2f}%)")
-    print(f"  一致但无效数占所有病例总和的百分比: {total_consistent_but_ineffective}/{total_all_cases} ({(total_consistent_but_ineffective / total_all_cases * 100) if total_all_cases > 0 else 0.0:.2f}%)")
+    print(f"\n[Consistent and Effective Statistics (Model Consistent + Pathology Match)]")
+    print(f"  Average consistent and effective rate across all diseases: {avg_consistent_and_effective_rate:.2f}%")
+    print(f"  Percentage of consistent and effective cases out of total: {total_consistent_and_effective}/{total_all_cases} ({consistent_and_effective_percent_of_all:.2f}%)")
+    print(f"  Percentage of consistent but ineffective cases out of total: {total_consistent_but_ineffective}/{total_all_cases} ({(total_consistent_but_ineffective / total_all_cases * 100) if total_all_cases > 0 else 0.0:.2f}%)")
     
-    # 计算按轮次一致性的统计
+    # Calculate consistency statistics by round
     avg_round_1_rate = df['round_1_consistent_percent'].mean()
     avg_round_2_rate = df['round_2_consistent_percent'].mean()
     avg_round_3_rate = df['round_3_consistent_percent'].mean()
@@ -427,24 +427,24 @@ def main():
     round_2_percent_of_all = (total_round_2_consistent / total_all_cases) * 100 if total_all_cases > 0 else 0.0
     round_3_percent_of_all = (total_round_3_consistent / total_all_cases) * 100 if total_all_cases > 0 else 0.0
     
-    print(f"\n【按轮次达成一致统计】")
-    print(f"  第1轮达成一致:")
-    print(f"    - 所有疾病平均值: {avg_round_1_rate:.2f}%")
-    print(f"    - 占所有病例总和: {total_round_1_consistent}/{total_all_cases} ({round_1_percent_of_all:.2f}%)")
-    print(f"  第2轮达成一致:")
-    print(f"    - 所有疾病平均值: {avg_round_2_rate:.2f}%")
-    print(f"    - 占所有病例总和: {total_round_2_consistent}/{total_all_cases} ({round_2_percent_of_all:.2f}%)")
-    print(f"  第3轮达成一致:")
-    print(f"    - 所有疾病平均值: {avg_round_3_rate:.2f}%")
-    print(f"    - 占所有病例总和: {total_round_3_consistent}/{total_all_cases} ({round_3_percent_of_all:.2f}%)")
+    print(f"\n[Consistency Statistics by Round]")
+    print(f"  Round 1 consistent:")
+    print(f"    - Average across all diseases: {avg_round_1_rate:.2f}%")
+    print(f"    - Out of total cases: {total_round_1_consistent}/{total_all_cases} ({round_1_percent_of_all:.2f}%)")
+    print(f"  Round 2 consistent:")
+    print(f"    - Average across all diseases: {avg_round_2_rate:.2f}%")
+    print(f"    - Out of total cases: {total_round_2_consistent}/{total_all_cases} ({round_2_percent_of_all:.2f}%)")
+    print(f"  Round 3 consistent:")
+    print(f"    - Average across all diseases: {avg_round_3_rate:.2f}%")
+    print(f"    - Out of total cases: {total_round_3_consistent}/{total_all_cases} ({round_3_percent_of_all:.2f}%)")
     
-    # 保存CSV文件
+    # Save CSV file
     output_csv = base_dir / 'analysis_summary.csv'
     df.to_csv(output_csv, index=False, encoding='utf-8-sig')
     print(f"\n{'='*80}")
-    print(f"详细结果已保存至: {output_csv}")
+    print(f"Detailed results saved to: {output_csv}")
     
-    # 保存总体统计数据
+    # Save overall statistics
     consistent_but_ineffective_percent_of_all = (total_consistent_but_ineffective / total_all_cases) * 100 if total_all_cases > 0 else 0.0
     summary_stats = {
         'total_all_cases': [total_all_cases],
@@ -472,11 +472,11 @@ def main():
     summary_df = pd.DataFrame(summary_stats)
     summary_csv = base_dir / 'overall_summary.csv'
     summary_df.to_csv(summary_csv, index=False, encoding='utf-8-sig')
-    print(f"总体统计数据已保存至: {summary_csv}")
+    print(f"Overall statistics saved to: {summary_csv}")
     
     
     print(f"{'='*80}\n")
-    print("分析完成！")
+    print("Analysis complete!")
 
 
 if __name__ == '__main__':

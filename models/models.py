@@ -181,43 +181,43 @@ class CustomLLM(LLM):
                 StoppingCriteriaList,
             )
 
-            # 特殊标记初始化
+            # Special token initialization
             BOS_TOKEN = "<｜begin▁of▁sentence｜>"
             EOS_TOKEN = "<｜end▁of▁sentence｜>"
 
-            # 分词器配置
+            # Tokenizer configuration
             self.tokenizer = AutoTokenizer.from_pretrained(
                 base_model,
                 cache_dir=base_models,
                 padding_side="left",
                 truncation_side="left",
-                use_fast=True,  # 启用快速分词模式
+                use_fast=True,  # Enable fast tokenization mode
             )
 
-            # 处理特殊标记
+            # Handle special tokens
             self.tokenizer.bos_token = BOS_TOKEN
             self.tokenizer.eos_token = EOS_TOKEN
-            self.tokenizer.pad_token = EOS_TOKEN  # 使用eot作为填充符
+            self.tokenizer.pad_token = EOS_TOKEN  # Use eot as padding token
 
-            # 4-bit量化配置
+            # 4-bit quantization configuration
             bnb_config = BitsAndBytesConfig(
                 load_in_4bit=True,
-                bnb_4bit_use_double_quant=True,  # 双层量化提升精度
-                bnb_4bit_quant_type="nf4",  # 推荐量化类型
+                bnb_4bit_use_double_quant=True,  # Double quantization for better accuracy
+                bnb_4bit_quant_type="nf4",  # Recommended quantization type
                 bnb_4bit_compute_dtype=torch.bfloat16,
             )
 
-            # 模型加载
+            # Model loading
             self.model = AutoModelForCausalLM.from_pretrained(
                 base_model,
                 cache_dir=base_models,
                 device_map="auto",
                 quantization_config=bnb_config,
-                # trust_remote_code=True,            # 需要信任自定义代码
-                # use_flash_attention_2=True        # 启用Flash Attention
+                # trust_remote_code=True,            # Need to trust custom code
+                # use_flash_attention_2=True        # Enable Flash Attention
             )
 
-            # # 停止条件设置
+            # # Stop condition settings
             # stop_words_ids = [
             #     self.tokenizer.convert_tokens_to_ids(word)
             #     for word in ["<｜end▁of▁thinking｜>", "<|eom_id|>", "<|end_of_text|>"]

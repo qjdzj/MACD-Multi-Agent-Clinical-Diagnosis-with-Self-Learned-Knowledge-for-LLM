@@ -80,13 +80,13 @@ PATHOLOGY_MAPPING_RULES = {
 
 def extract_diagnosis_from_text(raw_text: str) -> str:
     """
-    从诊断文本中提取诊断名称
+    Extract diagnosis name from diagnostic text
     
     Args:
-        raw_text: 原始诊断文本
+        raw_text: Original diagnostic text
     
     Returns:
-        提取的诊断名称
+        Extracted diagnosis name
     """
     if not isinstance(raw_text, str):
         return "Invalid Input Type"
@@ -96,7 +96,7 @@ def extract_diagnosis_from_text(raw_text: str) -> str:
     match = re.search(regex, prediction, flags=re.IGNORECASE)
     diagnosis = match.group(2).strip() if match else raw_text
     
-    # 清理诊断文本
+    # Clean diagnosis text
     cleanup_keywords = [
         "rationale", "note", "recommendation", "explanation", "finding",
         "other.*diagnos.*include", "other.*diagnos.*considered(?: were)?",
@@ -129,15 +129,15 @@ def map_pathology_name(
 
 ) -> str:
     """
-    对提取的诊断名进行全局映
+    Global mapping for extracted diagnosis names
 
     Args:
-        original_sentence: 原始文本
-        extracted_diagnosis: 提取的诊断
-        mapping_rules: 映射规则（默认使用PATHOLOGY_MAPPING_RULES）
+        original_sentence: Original text
+        extracted_diagnosis: Extracted diagnosis
+        mapping_rules: Mapping rules (default uses PATHOLOGY_MAPPING_RULES)
 
     Returns:
-        映射后的疾病名称
+        Mapped disease name
     """
     if mapping_rules is None:
         mapping_rules = PATHOLOGY_MAPPING_RULES
@@ -158,26 +158,26 @@ def map_pathology_name(
 
     # 遍历规则库中的每一种疾病及其规则
     for pathology_name, rules in mapping_rules.items():
-        # 层级 1: 专属正则表达式匹配 (如果有)
+        # Level 1: Dedicated regex matching (if exists)
         if 'regex_patterns' in rules:
             for pattern in rules['regex_patterns']:
                 match = pattern.search(extracted_diagnosis)
                 if match and keyword_positive(original_sentence, match.group(0)):
                     return pathology_name
 
-        # 层级 2: 模糊字符串匹配 - 针对原始诊断
+        # Level 2: Fuzzy string matching - for original diagnosis
         answer_for_search = remove_punctuation(extracted_diagnosis.lower())
         for word in answer_for_search.split():
             if fuzz.ratio(word, pathology_name) > 90 and keyword_positive(original_sentence, word):
                 return pathology_name
 
-        # 层级 2b: 模糊字符串匹配 - 针对预处理后的诊断
+        # Level 2b: Fuzzy string matching - for preprocessed diagnosis
         processed_answer_for_search = remove_punctuation(processed_diagnosis.lower())
         for word in processed_answer_for_search.split():
             if fuzz.ratio(word, pathology_name) > 90 and keyword_positive(original_sentence, word):
                 return pathology_name
 
-        # 层级 3: 通用关键词组合匹配 - 针对原始诊断
+        # Level 3: Generic keyword combination matching - for original diagnosis
         all_alternatives = rules.get("alternatives", []) + rules.get("gracious_alternatives", [])
         for alt_rule in all_alternatives:
             loc = alt_rule["location"]
@@ -196,7 +196,7 @@ def map_pathology_name(
                     keyword_positive(original_sentence, mod)):
                     return pathology_name
 
-        # 层级 3b: 通用关键词组合匹配 - 针对预处理后的诊断
+        # Level 3b: Generic keyword combination matching - for preprocessed diagnosis
         for alt_rule in all_alternatives:
             loc = alt_rule["location"]
             loc_pattern = r'\b' + re.escape(loc) + r'\b'
@@ -227,16 +227,16 @@ def map_pathology_name(
 
 class DiagnosisComparator:
     """
-    使用BioBERT进行诊断一致性评估
+    Use BioBERT for diagnosis consistency evaluation
     """
     
     def __init__(self, model_path: str, threshold: float = 0.8):
         """
-        初始化诊断比较器
+        Initialize diagnosis comparator
         
         Args:
-            model_path: BioBERT模型路径
-            threshold: 一致性阈值
+            model_path: BioBERT model path
+            threshold: Consistency threshold
         """
         self.model_path = model_path
         self.threshold = threshold
@@ -276,13 +276,13 @@ class DiagnosisComparator:
 
     def compare(self, diagnoses: List[str]) -> Tuple[str, Dict[str, float]]:
         """
-        比较诊断的一致性
+        Compare consistency of diagnoses
         
         Args:
-            diagnoses: 诊断列表
+            diagnoses: List of diagnoses
         
         Returns:
-            (一致性状态, 相似度分数字典)
+            (consistency status, similarity score dictionary)
         """
         if len(diagnoses) < 2:
             return "Insufficient information", {}

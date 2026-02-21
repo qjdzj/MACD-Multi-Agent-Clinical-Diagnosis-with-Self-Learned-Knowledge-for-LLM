@@ -71,7 +71,7 @@ def load_all_past_diagnosis_results(pathology, result_dir):
         data = {}
         for d in read_from_pickle_file(file_path):
             data.update(d)
-        # 保证key为int
+        # Ensure key is int
         data_int_keys = {int(k): v for k, v in data.items()}
         all_results[fname] = data_int_keys
     return all_results
@@ -198,7 +198,7 @@ def run(args: DictConfig):
         raise NotImplementedError
     print(basic_prompt)
 
-    # 根据不同模板设置输入变量
+    # Set input variables based on different templates
     if args.prompt_template == "DIAGSUM_WITH_PAST":
         prompt_input_vars = [
             "input",
@@ -325,7 +325,7 @@ def run(args: DictConfig):
         f"{pathology}_hadm_info_first_diag", base_mimic=args.base_mimic
     )
 
-    # 历史诊断结果：按需加载
+    # Historical diagnosis results: load on demand
     if hasattr(args, 'use_past_diagnosis') and args.use_past_diagnosis:
         past_diagnosis_dir = getattr(args, 'past_diagnosis_dir', None)
         if past_diagnosis_dir is None and hasattr(args, 'path') and hasattr(args.path, 'past_diagnosis_dir'):
@@ -404,7 +404,7 @@ def run(args: DictConfig):
         # This we want to leave for future formatting
         input = input.replace("{{rad_reports}}", "{rad_reports}")
 
-        # 历史诊断：不参与长度控制以保持一致性
+        # Historical diagnosis: does not participate in length control to maintain consistency
         if hasattr(args, 'use_past_diagnosis') and args.use_past_diagnosis:
             past_diagnosis_results_for_id = ""
             idx_doc = 1

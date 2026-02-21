@@ -45,7 +45,7 @@ class PericarditisEvaluator(PathologyEvaluator):
             }
         ]
 
-        # 实验室检查配置
+        # Laboratory test configuration
         self.required_lab_tests = {
             "Inflammation": INFLAMMATION_LAB_TESTS + [
                 50889,  # CRP
@@ -68,7 +68,7 @@ class PericarditisEvaluator(PathologyEvaluator):
             and t not in self.required_lab_tests["Cardiac Damage"]
         ]
 
-        # 治疗评估配置
+        # Treatment evaluation configuration
         self.answers["Treatment Requested"] = {
             "AntiInflammatory": False,
             "Colchicine": False,
@@ -87,19 +87,19 @@ class PericarditisEvaluator(PathologyEvaluator):
         }
 
     def score_imaging(self, region: str, modality: str) -> None:
-        """根据心包炎影像学指南评分"""
+        """Score according to pericarditis imaging guidelines"""
         if region == "Chest":
-            # 超声心动图为金标准
+            # Echocardiogram is the gold standard
             if modality == "Echocardiogram":
                 if self.scores["Imaging"] == 0:
                     self.scores["Imaging"] = 2
                 return True
-            # CT/MRI用于复杂病例
+            # CT/MRI for complex cases
             if modality in ["CT", "MRI"]:
                 if self.scores["Imaging"] < 2:
                     self.scores["Imaging"] = 1
                 return True
-            # X光检查灵敏度低
+            # X-ray has low sensitivity
             if modality == "Radiograph":
                 if self.scores["Imaging"] < 1:
                     self.scores["Imaging"] = 0.5
@@ -107,30 +107,30 @@ class PericarditisEvaluator(PathologyEvaluator):
         return False
 
     def score_treatment(self) -> None:
-        """治疗评分逻辑"""
-        # 抗炎药物治疗
+        """Treatment scoring logic"""
+        # Anti-inflammatory drug treatment
         if keyword_positive(self.answers["Treatment"], "nsaid|ibuprofen|aspirin"):
             self.answers["Treatment Requested"]["AntiInflammatory"] = True
         
-        # 秋水仙碱治疗
+        # Colchicine treatment
         if procedure_checker(COLCHICINE_TREATMENT_KEYWORDS, [self.answers["Treatment"]]):
             self.answers["Treatment Requested"]["Colchicine"] = True
 
-        # 心包穿刺术
+        # Pericardiocentesis
         if (procedure_checker(PERICARDIOCENTESIS_PROCEDURES_ICD9, self.procedures_icd9)
         or procedure_checker(PERICARDIOCENTESIS_PROCEDURES_ICD10, self.procedures_icd10)
         ):
             self.answers["Treatment Requested"]["Pericardiocentesis"] = True
 
-        # 心包切除术
+        # Pericardiectomy
         if procedure_checker(PERICARDIECTOMY_PROCEDURES_KEYWORDS, self.procedures_discharge):
             self.answers["Treatment Requested"]["Pericardiectomy"] = True
 
-        # 抗生素治疗（感染性心包炎）
+        # Antibiotic treatment (infectious pericarditis)
         if keyword_positive(self.answers["Treatment"], "antibiotic") and self._is_infectious_case():
             self.answers["Treatment Requested"]["Antibiotics"] = True
 
-        # 调整必要治疗需求
+        # Adjust necessary treatment requirements
         if self._has_cardiac_tamponade():
             self.answers["Treatment Required"]["Pericardiocentesis"] = True
         if self._is_recurrent_case():

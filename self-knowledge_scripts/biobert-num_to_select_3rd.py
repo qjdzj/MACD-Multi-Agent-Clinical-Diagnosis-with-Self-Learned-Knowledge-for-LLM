@@ -9,7 +9,7 @@ import torch
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# 加载BioBERT模型和分词器
+# Load BioBERT model and tokenizer
 def load_biobert():
     tokenizer = AutoTokenizer.from_pretrained(
         ''
@@ -17,7 +17,7 @@ def load_biobert():
     model = AutoModel.from_pretrained('')
     return tokenizer, model
 
-# 将文本转化为向量
+# Convert text to vectors
 def encode_texts(texts, tokenizer, model, max_length=128):
     inputs = tokenizer(texts, padding=True, truncation=True, max_length=max_length, return_tensors="pt")
     with th.no_grad():
@@ -57,11 +57,11 @@ def main():
 
     num_to_select = 7  
 
-    # 加载模型并向量化
+    # Load model and vectorize
     tokenizer, model = load_biobert()
     embeddings = encode_texts(texts, tokenizer, model)
 
-    # 筛选相似度最低的文本
+    # Filter texts with lowest similarity
     selected_texts = select_low_similarity_subset(texts, embeddings, num_to_select)
     print("Selected diagnostic criteria:")
     for text in selected_texts:

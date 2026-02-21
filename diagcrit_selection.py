@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from apricot import FacilityLocationSelection
 
-# 文本数据
+# Text data
 texts = [
     "This is a sample text about machine learning.",
     "Another text discussing deep learning concepts.",
@@ -15,28 +15,28 @@ texts = [
     "Example on transformers and attention mechanisms."
 ]
 
-# 1. 文本向量化
+# 1. Text vectorization
 vectorizer = TfidfVectorizer()
 text_features = vectorizer.fit_transform(texts).toarray()
 print(f"Text Features:\n{text_features}")
 
-# 2. 聚类生成概念特征
+# 2. Generate concept features through clustering
 num_concepts = 2
 kmeans = KMeans(n_clusters=num_concepts)
 concept_features = kmeans.fit_transform(text_features)
 print(f"Concept Features:\n{concept_features}")
 
-# 3. 概念间相似度计算
+# 3. Calculate similarity between concepts
 concept_sim_matrix = cosine_similarity(concept_features)
 print(f"Concept Similarity Matrix:\n{concept_sim_matrix}")
 
-# 4. 子模选择
+# 4. Submodular selection
 def submodular_select_text(features, num_concepts):
     selector = FacilityLocationSelection(num_concepts, metric='cosine')
     selected_idx = selector.fit_transform(features)
     return selected_idx
 
-# 5. 选择最优概念
+# 5. Select optimal concepts
 num_selected_concepts = 2
 selected_idx = submodular_select_text(text_features, num_selected_concepts)
 print(f"selected_idx: {selected_idx}")
@@ -45,6 +45,6 @@ print(f"selected_idx: {selected_idx}")
 selected_idx = [int(i) for i in selected_idx]
 print(f"selected_idx: {selected_idx}")
 
-# 输出选择结果
+# Output selection results
 selected_texts = [texts[i] for i in selected_idx]
 print("Selected Texts:", selected_texts)

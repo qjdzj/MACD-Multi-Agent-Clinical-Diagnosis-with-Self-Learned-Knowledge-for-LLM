@@ -15,10 +15,10 @@ class PulmonaryEmbolismEvaluator(PathologyEvaluator):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-                # 增加病理名称的模糊匹配模式
+                # Add fuzzy matching patterns for pathology names
         self._diagnosis_patterns = [
-            re.compile(r'\b(?:pulmonary\s+embolism|PE)\b', re.IGNORECASE),  # 主模式
-            re.compile(r'\b(?:pulmonary|PE)\b.*?\b(?:embolus|thrombus)\b', re.IGNORECASE)  # 替代模式
+            re.compile(r'\b(?:pulmonary\s+embolism|PE)\b', re.IGNORECASE),  # Main pattern
+            re.compile(r'\b(?:pulmonary|PE)\b.*?\b(?:embolus|thrombus)\b', re.IGNORECASE)  # Alternative pattern
         ]
         self.pathology = "pulmonary embolism"
         self.alternative_pathology_names = [
@@ -79,17 +79,17 @@ class PulmonaryEmbolismEvaluator(PathologyEvaluator):
         }
 
     def score_diagnosis(self) -> None:
-        # """通过正则表达式优先匹配完整诊断术语"""
+        # """Match complete diagnostic terms using regex with priority"""
         raw_diagnosis = self.answers["Diagnosis"]
         
-        # 优先检查完整术语匹配
+        # Prioritize complete term matching
         for pattern in self._diagnosis_patterns:
             if pattern.search(raw_diagnosis):
                 self.scores["Diagnosis"] = 1
                 self.scores["Gracious Diagnosis"] = 1
                 return
         
-        # 保底使用父类逻辑（单词级模糊匹配）
+        # Fall back to parent class logic (word-level fuzzy matching)
         super().score_diagnosis()
 
     def score_imaging(self, region: str, modality: str) -> None:
